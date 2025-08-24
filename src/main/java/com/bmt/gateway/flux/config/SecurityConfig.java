@@ -1,0 +1,59 @@
+package com.bmt.gateway.flux.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(ServerHttpSecurity.CorsSpec::disable) // you can enable with global CORS if needed
+                .authorizeExchange(exchange -> exchange
+                        // ✅ Swagger & API docs
+                        .pathMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/auth-service/v3/api-docs",
+                                "/user-service/v3/api-docs",
+                                //"/auth-service/v1/auth/login",
+                                //"/auth-service/v1/register",
+                                "/webjars/**",   // Swagger static
+                                "/swagger-resources/**",
+                                "/css/**",       // static CSS
+                                "/js/**",        // static JS
+                                "/images/**"     // static images
+                        ).permitAll()
+
+                        // ✅ Public auth-service APIs
+                        .pathMatchers(
+                                "/auth-service/v1/auth/login"
+                        ).permitAll()
+
+                        // everything else requires authentication
+                        .anyExchange().authenticated()
+                )
+                // If you are using JWT based security
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+        return http.build();
+    }
+
+    /**
+     * Password Encoder for storing and verifying user passwords.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+
