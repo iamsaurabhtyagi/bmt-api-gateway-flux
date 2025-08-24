@@ -25,10 +25,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/auth-service/v3/api-docs",
                                 "/user-service/v3/api-docs",
-                                //"/auth-service/v1/auth/login",
-                                //"/auth-service/v1/register",
-                                "/webjars/**",   // Swagger static
                                 "/swagger-resources/**",
+                                "/webjars/**",   // Swagger static
                                 "/css/**",       // static CSS
                                 "/js/**",        // static JS
                                 "/images/**"     // static images
@@ -37,6 +35,13 @@ public class SecurityConfig {
                         // ✅ Public auth-service APIs
                         .pathMatchers(
                                 "/auth-service/v1/auth/login"
+                        ).permitAll()
+
+                        // ✅ Public user-service APIs
+                        .pathMatchers(
+                                "/user-service/v1/user/register",
+                                "/user-service/v1/user/resend-otp",
+                                "/user-service/v1/user/verify-otp"
                         ).permitAll()
 
                         // everything else requires authentication
