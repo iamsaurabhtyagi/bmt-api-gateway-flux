@@ -21,6 +21,11 @@ public class GatewayRoutesConfig {
                         .filters(f -> f.stripPrefix(1))
                         .uri("http://localhost:8081"))
 
+                // Route for vendor-service (includes APIs + v3/api-docs)
+                .route("vendor-service", r -> r.path("/vendor-service/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://localhost:8082"))
+
                 .build();
     }
 }

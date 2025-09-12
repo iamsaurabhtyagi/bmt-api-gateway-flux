@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/auth-service/v3/api-docs",
                                 "/user-service/v3/api-docs",
+                                "/vendor-service/v3/api-docs",
                                 "/swagger-resources/**",
                                 "/webjars/**",   // Swagger static
                                 "/css/**",       // static CSS
